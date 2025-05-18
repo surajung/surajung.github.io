@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>모니터 해상도 비교</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f5f5f7;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .monitor {
+            background: #fff;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .monitor-title {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #1d1d1f;
+        }
+
+        .monitor-display {
+            background: #000;
+            border-radius: 8px;
+            position: relative;
+            margin: 0 auto;
+            overflow: hidden;
+        }
+
+        .monitor-content {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .monitor-23-fhd {
+            width: 510px;
+            height: 287px;
+        }
+
+        .monitor-34-wqhd {
+            width: 753px;
+            height: 314px;
+        }
+
+        .monitor-38-wqhd {
+            width: 842px;
+            height: 351px;
+        }
+
+        .monitor-32-4k {
+            width: 709px;
+            height: 399px;
+        }
+
+        .info {
+            margin-top: 10px;
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        .text-sample {
+            margin: 10px 0;
+            text-align: center;
+            line-height: 1.5;
+        }
+
+        .text-23inch {
+            font-size: 14px;
+        }
+
+        .text-34inch-100 {
+            font-size: 12.2px;
+        }
+
+        .text-38inch-100 {
+            font-size: 12.2px;
+        }
+
+        .text-38inch-125 {
+            font-size: 15.3px;
+        }
+
+        .text-32inch-100 {
+            font-size: 10.2px;
+        }
+
+        .text-32inch-125 {
+            font-size: 12.8px;
+        }
+
+        .ppi-info {
+            font-size: 0.8em;
+            color: #888;
+            margin-top: 5px;
+        }
+
+        /* 겹쳐서 비교하는 섹션 */
+        .comparison-section {
+            margin-top: 50px;
+            padding: 20px;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .comparison-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding-bottom: 50px;
+        }
+
+        .comparison-title {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #1d1d1f;
+            margin: 0;
+        }
+
+        .comparison-selects {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .comparison-selects select {
+            padding: 8px 16px;
+            font-size: 1em;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            background: #fff;
+            cursor: pointer;
+        }
+
+        .comparison-selects span {
+            color: #666;
+        }
+
+        .comparison-container {
+            position: relative;
+            width: 1020px; /* 23인치 2개 (510px * 2) */
+            height: 287px;
+            margin: 0 auto;
+        }
+
+        .comparison-row {
+            display: flex;
+            position: relative;
+            z-index: 1;
+        }
+
+        .comparison-monitor {
+            position: relative;
+            width: 510px;
+            height: 287px;
+            background: #000;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .comparison-monitor-34 {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 753px;
+            height: 314px;
+            background: rgba(0, 0, 0, 0.7);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            overflow: hidden;
+            z-index: 2;
+            display: none;
+        }
+
+        .comparison-monitor-38 {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 842px;
+            height: 351px;
+            background: rgba(0, 0, 0, 0.7);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            overflow: hidden;
+            z-index: 2;
+            display: none;
+        }
+
+        .comparison-monitor-32 {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 709px;
+            height: 399px;
+            background: rgba(0, 0, 0, 0.7);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            overflow: hidden;
+            z-index: 2;
+            display: none;
+        }
+
+        .comparison-content {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .comparison-text {
+            text-align: center;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>모니터 해상도 비교 (PPI 기준)</h1>
+        
+        <div class="monitor">
+            <div class="monitor-title">23인치 FHD (1920 x 1080) - 100% 스케일</div>
+            <div class="monitor-display monitor-23-fhd">
+                <div class="monitor-content">
+                    <div class="text-sample text-23inch">
+                        <div>1920 x 1080</div>
+                        <div>100% 스케일</div>
+                        <div class="ppi-info">PPI: 95.8</div>
+                        <div style="margin-top: 20px;">이 텍스트는 14px 크기입니다.</div>
+                        <div>이 텍스트는 14px 크기입니다.</div>
+                        <div>이 텍스트는 14px 크기입니다.</div>
+                    </div>
+                </div>
+            </div>
+            <div class="info">
+                실제 크기: 510 x 287 픽셀 (화면의 1/4 크기로 표시)
+            </div>
+        </div>
+
+        <div class="monitor">
+            <div class="monitor-title">34인치 WQHD (3440 x 1440) - 100% 스케일</div>
+            <div class="monitor-display monitor-34-wqhd">
+                <div class="monitor-content">
+                    <div class="text-sample text-34inch-100">
+                        <div>3440 x 1440</div>
+                        <div>100% 스케일</div>
+                        <div class="ppi-info">PPI: 109.7 (23인치 기준 87.3%)</div>
+                        <div style="margin-top: 20px;">이 텍스트는 12.2px 크기입니다.</div>
+                        <div>이 텍스트는 12.2px 크기입니다.</div>
+                        <div>이 텍스트는 12.2px 크기입니다.</div>
+                    </div>
+                </div>
+            </div>
+            <div class="info">
+                실제 크기: 753 x 314 픽셀 (화면의 1/4 크기로 표시)
+            </div>
+        </div>
+
+        <div class="monitor">
+            <div class="monitor-title">38인치 WQHD+ (3840 x 1600) - 100% 스케일</div>
+            <div class="monitor-display monitor-38-wqhd">
+                <div class="monitor-content">
+                    <div class="text-sample text-38inch-100">
+                        <div>3840 x 1600</div>
+                        <div>100% 스케일</div>
+                        <div class="ppi-info">PPI: 109.7 (23인치 기준 87.3%)</div>
+                        <div style="margin-top: 20px;">이 텍스트는 12.2px 크기입니다.</div>
+                        <div>이 텍스트는 12.2px 크기입니다.</div>
+                        <div>이 텍스트는 12.2px 크기입니다.</div>
+                    </div>
+                </div>
+            </div>
+            <div class="info">
+                실제 크기: 842 x 351 픽셀 (화면의 1/4 크기로 표시)
+            </div>
+        </div>
+
+        <div class="monitor">
+            <div class="monitor-title">38인치 WQHD+ (3840 x 1600) - 125% 스케일</div>
+            <div class="monitor-display monitor-38-wqhd">
+                <div class="monitor-content">
+                    <div class="text-sample text-38inch-125">
+                        <div>3840 x 1600</div>
+                        <div>125% 스케일</div>
+                        <div class="ppi-info">PPI: 109.7 (23인치 기준 109.1%)</div>
+                        <div style="margin-top: 20px;">이 텍스트는 15.3px 크기입니다.</div>
+                        <div>이 텍스트는 15.3px 크기입니다.</div>
+                        <div>이 텍스트는 15.3px 크기입니다.</div>
+                    </div>
+                </div>
+            </div>
+            <div class="info">
+                실제 크기: 842 x 351 픽셀 (화면의 1/4 크기로 표시)
+            </div>
+        </div>
+
+        <div class="monitor">
+            <div class="monitor-title">32인치 4K (3840 x 2160) - 100% 스케일</div>
+            <div class="monitor-display monitor-32-4k">
+                <div class="monitor-content">
+                    <div class="text-sample text-32inch-100">
+                        <div>3840 x 2160</div>
+                        <div>100% 스케일</div>
+                        <div class="ppi-info">PPI: 137.7 (23인치 기준 69.5%)</div>
+                        <div style="margin-top: 20px;">이 텍스트는 10.2px 크기입니다.</div>
+                        <div>이 텍스트는 10.2px 크기입니다.</div>
+                        <div>이 텍스트는 10.2px 크기입니다.</div>
+                    </div>
+                </div>
+            </div>
+            <div class="info">
+                실제 크기: 709 x 399 픽셀 (화면의 1/4 크기로 표시)
+            </div>
+        </div>
+
+        <div class="monitor">
+            <div class="monitor-title">32인치 4K (3840 x 2160) - 125% 스케일</div>
+            <div class="monitor-display monitor-32-4k">
+                <div class="monitor-content">
+                    <div class="text-sample text-32inch-125">
+                        <div>3840 x 2160</div>
+                        <div>125% 스케일</div>
+                        <div class="ppi-info">PPI: 137.7 (23인치 기준 86.9%)</div>
+                        <div style="margin-top: 20px;">이 텍스트는 12.8px 크기입니다.</div>
+                        <div>이 텍스트는 12.8px 크기입니다.</div>
+                        <div>이 텍스트는 12.8px 크기입니다.</div>
+                    </div>
+                </div>
+            </div>
+            <div class="info">
+                실제 크기: 709 x 399 픽셀 (화면의 1/4 크기로 표시)
+            </div>
+        </div>
+
+        <div class="comparison-section">
+            <div class="comparison-header">
+                <div class="comparison-title">모니터 크기 비교</div>
+                <div class="comparison-selects">
+                    <select id="monitorSelect1" onchange="toggleMonitor()">
+                        <option value="23">23인치 FHD (1920 x 1080)</option>
+                        <option value="32">32인치 4K (3840 x 2160)</option>
+                        <option value="34">34인치 WQHD (3440 x 1440)</option>
+                        <option value="38">38인치 WQHD+ (3840 x 1600)</option>
+                    </select>
+                    <span>vs</span>
+                    <select id="monitorSelect2" onchange="toggleMonitor()">
+                        <option value="23">23인치 FHD (1920 x 1080)</option>
+                        <option value="32">32인치 4K (3840 x 2160)</option>
+                        <option value="34">34인치 WQHD (3440 x 1440)</option>
+                        <option value="38">38인치 WQHD+ (3840 x 1600)</option>
+                    </select>
+                </div>
+            </div>
+            <div class="comparison-container">
+                <div class="comparison-row">
+                    <div class="comparison-monitor">
+                        <div class="comparison-content">
+                            <div class="comparison-text text-23inch">
+                                <div>23인치 FHD</div>
+                                <div>1920 x 1080</div>
+                                <div style="margin-top: 20px;">이 텍스트는 14px 크기입니다.</div>
+                                <div>이 텍스트는 14px 크기입니다.</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="comparison-monitor">
+                        <div class="comparison-content">
+                            <div class="comparison-text text-23inch">
+                                <div>23인치 FHD</div>
+                                <div>1920 x 1080</div>
+                                <div style="margin-top: 20px;">이 텍스트는 14px 크기입니다.</div>
+                                <div>이 텍스트는 14px 크기입니다.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="comparison-monitor-32">
+                    <div class="comparison-content">
+                        <div class="comparison-text text-32inch-100">
+                            <div>32인치 4K</div>
+                            <div>3840 x 2160</div>
+                            <div style="margin-top: 20px;">이 텍스트는 10.2px 크기입니다.</div>
+                            <div>이 텍스트는 10.2px 크기입니다.</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="comparison-monitor-34">
+                    <div class="comparison-content">
+                        <div class="comparison-text text-34inch-100">
+                            <div>34인치 WQHD</div>
+                            <div>3440 x 1440</div>
+                            <div style="margin-top: 20px;">이 텍스트는 12.2px 크기입니다.</div>
+                            <div>이 텍스트는 12.2px 크기입니다.</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="comparison-monitor-38">
+                    <div class="comparison-content">
+                        <div class="comparison-text text-38inch-100">
+                            <div>38인치 WQHD+</div>
+                            <div>3840 x 1600</div>
+                            <div style="margin-top: 20px;">이 텍스트는 12.2px 크기입니다.</div>
+                            <div>이 텍스트는 12.2px 크기입니다.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="info" style="text-align: center; margin-top: 20px;">
+                선택한 두 모니터의 크기를 비교합니다.
+            </div>
+        </div>
+
+        <script>
+            function toggleMonitor() {
+                const select1 = document.getElementById('monitorSelect1');
+                const select2 = document.getElementById('monitorSelect2');
+                const monitor32 = document.querySelector('.comparison-monitor-32');
+                const monitor34 = document.querySelector('.comparison-monitor-34');
+                const monitor38 = document.querySelector('.comparison-monitor-38');
+                
+                // 모든 모니터 숨기기
+                monitor32.style.display = 'none';
+                monitor34.style.display = 'none';
+                monitor38.style.display = 'none';
+                
+                // 첫 번째 선택된 모니터 표시
+                if (select1.value === '32') {
+                    monitor32.style.display = 'block';
+                } else if (select1.value === '34') {
+                    monitor34.style.display = 'block';
+                } else if (select1.value === '38') {
+                    monitor38.style.display = 'block';
+                }
+
+                // 두 번째 선택된 모니터 표시
+                if (select2.value === '32') {
+                    monitor32.style.display = 'block';
+                } else if (select2.value === '34') {
+                    monitor34.style.display = 'block';
+                } else if (select2.value === '38') {
+                    monitor38.style.display = 'block';
+                }
+            }
+        </script>
+    </div>
+</body>
+</html> 
